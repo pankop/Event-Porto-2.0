@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   postgres:
     hostname: postgres
@@ -17,7 +15,7 @@ services:
         
   app:
     hostname: app
-    container_name: go-gin-clean-starter
+    container_name: event-porto-app
     build:
       context: . 
       dockerfile: Dockerfile
@@ -26,7 +24,7 @@ services:
     restart: always
     volumes:
       -  ./:/app
-    depends_on: 
+    depends_on:
       - postgres
     env_file:
       - .env
