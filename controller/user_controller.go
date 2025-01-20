@@ -156,7 +156,7 @@ func (c *userController) Update(ctx *gin.Context) {
 	}
 
 	userId := ctx.MustGet("user_id").(string)
-	result, err := c.userService.Update(ctx.Request.Context(), req, userId)
+	result, err := c.userService.UpdateUser(ctx.Request.Context(), req, userId)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATE_USER, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
@@ -170,7 +170,7 @@ func (c *userController) Update(ctx *gin.Context) {
 func (c *userController) Delete(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(string)
 
-	if err := c.userService.Delete(ctx.Request.Context(), userId); err != nil {
+	if err := c.userService.DeleteUser(ctx.Request.Context(), userId); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETE_USER, err.Error(), nil)
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
 		return
