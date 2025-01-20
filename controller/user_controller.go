@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Caknoooo/go-gin-clean-starter/dto"
@@ -19,6 +20,8 @@ type (
 		VerifyEmail(ctx *gin.Context)
 		Update(ctx *gin.Context)
 		Delete(ctx *gin.Context)
+		ResetPassword(ctx *gin.Context)
+		ForgetPassword(ctx *gin.Context)
 	}
 
 	userController struct {
@@ -177,5 +180,56 @@ func (c *userController) Delete(ctx *gin.Context) {
 	}
 
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETE_USER, nil)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (c *userController) ResetPassword(ctx *gin.Context) {
+	token := ctx.Query("token")
+	var req dto.ResetPasswordRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+	err := c.userService.ResetPassword(ctx.Request.Context(), token, req.NewPassword)
+	if err != nil {
+		switch {
+		case errors.Is(err, dto.ErrEmailNotFound):
+			res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_EMAIL_NOT_FOUND, err.Error(), nil)
+			ctx.JSON(http.StatusNotFound, res)
+			return
+		case errors.Is(err, dto.ErrTokenExpired):
+			res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_TOKEN_EXPIRED, err.Error(), nil)
+			ctx.JSON(http.StatusBadRequest, res)
+			return
+		case errors.Is(err, dto.ErrTokenInvalid):
+			res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_TOKEN_NOT_VALID, err.Error(), nil)
+			ctx.JSON(http.StatusBadRequest, res)
+			return
+		default:
+			res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_RESET_PASSWORD, err.Error(), nil)
+			ctx.JSON(http.StatusBadRequest, res)
+			return
+		}
+	}
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_RESET_PASSWORD, nil)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (c *userController) ForgetPassword(ctx *gin.Context) {
+	var auth dto.ForgetPasswordRequest
+	if err := ctx.ShouldBind(&auth); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+	err := c.userService.ForgetPassword(ctx, auth)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_FORGET_PASSWORD, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_FORGET_PASSWORD, map[string]interface{}{})
 	ctx.JSON(http.StatusOK, res)
 }
