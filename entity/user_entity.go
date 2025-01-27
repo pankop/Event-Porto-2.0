@@ -7,14 +7,17 @@ import (
 )
 
 type User struct {
-	ID         uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
-	Name       string    `json:"name"`
-	TelpNumber string    `json:"telp_number"`
-	Email      string    `json:"email"`
-	Password   string    `json:"password"`
-	Role       string    `json:"role"`
-	ImageUrl   string    `json:"image_url"`
-	IsVerified bool      `json:"is_verified"`
+	ID uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
+
+	Name       string `json:"name"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Instansi   string `json:"instansi"`
+	TelpNumber string `json:"telp_number"`
+	InfoFrom   string `json:"info_from"`
+	Jenjang    string `json:"jenjang"`
+	Role       string `json:"role"`
+	IsVerified bool   `json:"is_verified"`
 
 	Timestamp
 }

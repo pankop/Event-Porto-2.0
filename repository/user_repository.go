@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"math"
 
 	"github.com/Caknoooo/go-gin-clean-starter/dto"
@@ -18,6 +19,7 @@ type (
 		CheckEmail(ctx context.Context, tx *gorm.DB, email string) (entity.User, bool, error)
 		UpdateUser(ctx context.Context, tx *gorm.DB, user entity.User) (entity.User, error)
 		DeleteUser(ctx context.Context, tx *gorm.DB, userId string) error
+		ResetPassword(context.Context, string, string) error
 	}
 
 	userRepository struct {
@@ -71,12 +73,12 @@ func (r *userRepository) GetAllUserWithPagination(ctx context.Context, tx *gorm.
 	totalPage := int64(math.Ceil(float64(count) / float64(req.PerPage)))
 
 	return dto.GetAllUserRepositoryResponse{
-		Users:     users,
+		Users: users,
 		PaginationResponse: dto.PaginationResponse{
-			Page: 		 req.Page,
-			PerPage: 	 req.PerPage,
-			Count: 		 count,
-			MaxPage: 	 totalPage,
+			Page:    req.Page,
+			PerPage: req.PerPage,
+			Count:   count,
+			MaxPage: totalPage,
 		},
 	}, err
 }
@@ -141,5 +143,22 @@ func (r *userRepository) DeleteUser(ctx context.Context, tx *gorm.DB, userId str
 		return err
 	}
 
+	return nil
+}
+
+func (r *userRepository) ResetPassword(ctx context.Context, email, hashedPassword string) error {
+	//query email apakah ada?
+	var user entity.User
+	if err := r.db.WithContext(ctx).Where("email =?", email).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return dto.ErrEmailNotFound
+		}
+		return err
+	}
+
+	//jika ketemu maka update
+	if err := r.db.WithContext(ctx).Model(&entity.User{}).Where("email = ?", email).Update("password", hashedPassword).Error; err != nil {
+		return err
+	}
 	return nil
 }
