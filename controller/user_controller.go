@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"github.com/Caknoooo/go-gin-clean-starter/utils/pagination"
 	"net/http"
 
 	"github.com/Caknoooo/go-gin-clean-starter/dto"
@@ -55,12 +56,7 @@ func (c *userController) Register(ctx *gin.Context) {
 }
 
 func (c *userController) GetAllUser(ctx *gin.Context) {
-	var req dto.PaginationRequest
-	if err := ctx.ShouldBind(&req); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
-		return
-	}
+	req := pagination.New(ctx)
 
 	result, err := c.userService.GetAllUserWithPagination(ctx.Request.Context(), req)
 	if err != nil {
@@ -69,14 +65,8 @@ func (c *userController) GetAllUser(ctx *gin.Context) {
 		return
 	}
 
-	resp := utils.Response{
-		Status:  true,
-		Message: dto.MESSAGE_SUCCESS_GET_LIST_USER,
-		Data:    result.Data,
-		Meta:    result.PaginationResponse,
-	}
-
-	ctx.JSON(http.StatusOK, resp)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_USER, result.Data, result.Meta)
+	ctx.JSON(http.StatusOK, res)
 }
 
 func (c *userController) Me(ctx *gin.Context) {

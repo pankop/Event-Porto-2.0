@@ -1,18 +1,28 @@
 [
   {
-    "name": "admin",
-    "telp_number": "08123456789",
-    "email": "admin1234@gmail.com",
-    "password": "admin1234",
-    "role": "admin",
+    "id":"3f9cf24c-94a8-476f-9513-53692476af46",
+    "name": "Shabrina Amalia Safaana",
+    "email": "shab1234@gmail.com",
+    "password": "shabaja",
+    "instansi": "SMAN 3 Samarinda",
+    "no_telp": "08123456789",
+    "info_from": "Instagram",
+    "province_id": "aaa7a3d6-6f1d-4b6b-9013-d24b0baa064b",
+    "jenjang": "SMA",
+    "role": "user",
     "is_verified": true
   },
   {
-    "name": "user",
-    "telp_number": "08123456789",
-    "email": "user1234@gmail.com",
-    "password": "user1234",
-    "role": "user",
-    "is_verified": true
+    "id":"2e8cf24c-94a8-476f-9513-53692476af45",
+    "name": "Paundra Pujo Darmawan",
+    "email": "testing@gmail.com",
+    "password": "pujoganteng123",
+    "instansi": "SMAN 1 KEDIRI",
+    "no_telp": "081234567890",
+    "info_from": "Instagram",
+    "province_id": "67f5c52c-7b45-4057-ba1d-9b2bd7ae9c7e",
+    "jenjang": "SMA",
+    "role": "admin",
+    "is_verified":true
   }
 ]

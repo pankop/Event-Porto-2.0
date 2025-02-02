@@ -1,0 +1,154 @@
+[
+  {
+    "id": "1d0fcaa0-cd01-4ff0-b10f-2dd56036f1fe",
+    "value": "Nanggroe Aceh Darussalam"
+  },
+  {
+    "id": "b9cf8f84-5d79-45e9-9b0c-3db727870df7",
+    "value": "Sumatera Utara"
+  },
+  {
+    "id": "53bbb948-ac14-4514-8350-554f3a850db6",
+    "value": "Sumatera Selatan"
+  },
+  {
+    "id": "0053b1f5-fb72-48fe-9947-2a32ddae435c",
+    "value": "Sumatera Barat"
+  },
+  {
+    "id": "631043fd-422d-4c2a-ab8d-8f9cb207e9bb",
+    "value": "Bengkulu"
+  },
+  {
+    "id": "8d8137af-a705-4e20-8d92-186887ccfc95",
+    "value": "Riau"
+  },
+  {
+    "id": "dca727a2-7d6c-4caa-a1df-7c1bfd88c889",
+    "value": "Kepulauan Riau"
+  },
+  {
+    "id": "23a772cc-49b4-41a3-9c79-3486dcedf3ae",
+    "value": "Jambi"
+  },
+  {
+    "id": "db54b981-04b5-4c32-b57b-84934f85fef8",
+    "value": "Lampung"
+  },
+  {
+    "id": "ae46089b-adc9-41c0-9879-9073f64d49d3",
+    "value": "Bangka Belitung"
+  },
+  {
+    "id": "442eebcd-6a47-48c9-a475-a787d69eb3a6",
+    "value": "Kalimantan Barat"
+  },
+  {
+    "id": "aaa7a3d6-6f1d-4b6b-9013-d24b0baa064b",
+    "value": "Kalimantan Timur"
+  },
+  {
+    "id": "e1f3d4c8-2e15-481f-9e58-dd4e81109bdc",
+    "value": "Kalimantan Selatan"
+  },
+  {
+    "id": "6c08ac31-1e5f-483b-a85f-c7e9c97a0d6e",
+    "value": "Kalimantan Tengah"
+  },
+  {
+    "id": "01566b2c-74b6-4ccc-8066-f8bd1433c6a4",
+    "value": "Kalimantan Utara"
+  },
+  {
+    "id": "2ea48b66-cff7-4e69-95b9-43547e0101f8",
+    "value": "Banten"
+  },
+  {
+    "id": "e7d7643b-ef57-4deb-bc23-25484835c7d6",
+    "value": "DKI Jakarta"
+  },
+  {
+    "id": "2d430a7b-c33b-4572-8e5e-23edf9c6a8f2",
+    "value": "Jawa Barat"
+  },
+  {
+    "id": "7453ff53-95f9-439c-9db7-96c6eeba9f2e",
+    "value": "Jawa Tengah"
+  },
+  {
+    "id": "87e09049-be41-4fa6-bedc-4f15cb3dc0dc",
+    "value": "Daerah Istimewa Yogyakarta"
+  },
+  {
+    "id": "67f5c52c-7b45-4057-ba1d-9b2bd7ae9c7e",
+    "value": "Jawa Timur"
+  },
+  {
+    "id": "ee5b66a1-d68c-49fe-8b61-9f6155fb4645",
+    "value": "Bali"
+  },
+  {
+    "id": "4a600232-68fd-4f68-8ccc-6cbd2813125f",
+    "value": "Nusa Tenggara Timur"
+  },
+  {
+    "id": "4d976cae-a6b1-460c-a240-755ab9460f1c",
+    "value": "Nusa Tenggara Barat"
+  },
+  {
+    "id": "d9927d51-b0b9-4b23-ae93-c5b433233653",
+    "value": "Gorontalo"
+  },
+  {
+    "id": "50a74459-51d2-4312-a251-a292814eb42d",
+    "value": "Sulawesi Barat"
+  },
+  {
+    "id": "2c43c198-475f-4145-b821-037d8fddd4a3",
+    "value": "Sulawesi Tengah"
+  },
+  {
+    "id": "ff0adddd-f61e-46c7-93bb-c936e84cb042",
+    "value": "Sulawesi Utara"
+  },
+  {
+    "id": "b0f0d904-dce8-4668-9c0e-eba5618ef5c0",
+    "value": "Sulawesi Tenggara"
+  },
+  {
+    "id": "5048fab6-8c4f-494a-ad88-a43cadae01d3",
+    "value": "Sulawesi Selatan"
+  },
+  {
+    "id": "23cb8ad4-f2a0-4257-92e0-68adee6fee8d",
+    "value": "Maluku Utara"
+  },
+  {
+    "id": "1f7c42b5-d66a-4721-b9cb-92f25b826d43",
+    "value": "Maluku"
+  },
+  {
+    "id": "f05eb105-7e28-4b3e-9348-c0c3105093bf",
+    "value": "Papua Barat"
+  },
+  {
+    "id": "00dc606e-9ad4-43ca-8f6f-e3086bd9f8da",
+    "value": "Papua"
+  },
+  {
+    "id": "b7bd1e43-089f-4eb3-aeff-569b555e22b5",
+    "value": "Papua Tengah"
+  },
+  {
+    "id": "b81f6148-17d2-466d-9679-669988aadec8",
+    "value": "Papua Pegunungan"
+  },
+  {
+    "id": "c87350fb-d6a1-4ecc-923d-7525ff8142dc",
+    "value": "Papua Selatan"
+  },
+  {
+    "id": "1fb18c4a-fcb0-4164-91c9-32eac9397cfe",
+    "value": "Papua Barat Daya"
+  }
+]

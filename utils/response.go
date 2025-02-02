@@ -1,5 +1,7 @@
 package utils
 
+import "github.com/Caknoooo/go-gin-clean-starter/utils/pagination"
+
 type Response struct {
 	Status  bool   `json:"status"`
 	Message string `json:"message"`
@@ -10,11 +12,15 @@ type Response struct {
 
 type EmptyObj struct{}
 
-func BuildResponseSuccess(message string, data any) Response {
+func BuildResponseSuccess(message string, data any, meta ...pagination.Meta) Response {
 	res := Response{
 		Status:  true,
 		Message: message,
 		Data:    data,
+	}
+
+	if len(meta) > 0 {
+		res.Meta = meta
 	}
 	return res
 }
