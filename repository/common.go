@@ -1,10 +1,197 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"errors"
+	"fmt"
+	"github.com/Caknoooo/go-gin-clean-starter/utils/logger"
+	"github.com/Caknoooo/go-gin-clean-starter/utils/pagination"
+	"gorm.io/gorm"
+	"reflect"
+	"strings"
+)
 
-func Paginate(page, perPage int) func(db *gorm.DB) *gorm.DB {
+var (
+	ErrSortBy           = errors.New("invalid sort (must be 'asc' or 'desc')")
+	ErrInvalidTypeModel = errors.New("invalid type model")
+	ErrInvalidField     = errors.New("invalid filter or sort field")
+)
+
+type MetaService struct {
+	Filter map[string]string
+	Sorter map[string]string
+}
+
+type Option func(*MetaService)
+
+func WithFilters(db *gorm.DB, m *pagination.Meta, opts ...Option) *gorm.DB {
+	metaService := MetaService{
+		Filter: make(map[string]string),
+		Sorter: make(map[string]string),
+	}
+
+	for _, opt := range opts {
+		opt(&metaService)
+	}
+
+	for i, v := range metaService.Filter {
+		fmt.Println(i + " " + v)
+	}
+
+	return metaService.buildFilter(db, m)
+}
+
+func AddModels(model any, tablePrefix string) Option {
+	return func(ms *MetaService) {
+		v := reflect.TypeOf(model)
+		if v.Kind() == reflect.Ptr {
+			v = v.Elem()
+		}
+
+		if v.Kind() == reflect.Struct {
+			for i := 0; i < v.NumField(); i++ {
+				field := v.Field(i)
+				jsonTag := field.Tag.Get("json")
+				if jsonTag == "" {
+					jsonTag = field.Name
+				}
+
+				fullField := fmt.Sprintf("%s.%s", tablePrefix, jsonTag)
+
+				if field.Anonymous {
+					addEmbeddedFields(field.Type, ms, tablePrefix)
+				} else {
+					switch field.Type.Kind() {
+					case reflect.String:
+						ms.Filter[jsonTag] = fmt.Sprintf("%s ILIKE ?", fullField)
+						ms.Sorter[jsonTag] = fullField
+					default:
+						ms.Filter[jsonTag] = fmt.Sprintf("%s = ?", fullField)
+						ms.Sorter[jsonTag] = fullField
+					}
+				}
+			}
+		}
+	}
+}
+
+func AddCustomField(field string, filterquery string, alias ...string) Option {
+	return func(ms *MetaService) {
+		ms.Filter[field] = filterquery
+		ms.Sorter[field] = field
+		if len(alias) > 0 {
+			ms.Sorter[field] = alias[0]
+		}
+	}
+}
+
+func (ms *MetaService) buildFilter(db *gorm.DB, meta *pagination.Meta) *gorm.DB {
+	query := db
+
+	filterBy := strings.Split(meta.FilterBy, ",")
+	filters := strings.Split(meta.Filter, ",")
+
+	for i, field := range filterBy {
+		if i >= len(filters) {
+			break
+		} else if filters[i] == "" {
+			continue
+		}
+
+		if condition, ok := ms.Filter[field]; ok {
+			var filterValue string
+			if i < len(filters) {
+				filterValue = filters[i]
+			}
+
+			if strings.Contains(strings.ToUpper(condition), "ILIKE") {
+				if filterValue != "" {
+					filterValue = fmt.Sprintf("%%%s%%", strings.ToLower(filterValue))
+				} else {
+					filterValue = "%%"
+				}
+			}
+
+			questionMarks := strings.Count(condition, "?")
+
+			filterValues := make([]interface{}, questionMarks)
+			for j := range filterValues {
+				filterValues[j] = filterValue
+			}
+
+			query = query.Where(condition, filterValues...)
+			if err := query.Error; err != nil {
+				return query
+			}
+		} else if field != "" {
+			query.Error = ErrInvalidField
+			return query
+		}
+	}
+
+	if meta.SortBy != "" {
+		if _, ok := ms.Sorter[meta.SortBy]; !ok {
+			query.Error = ErrInvalidTypeModel
+			return query
+		}
+
+		if meta.Sort != "asc" && meta.Sort != "desc" {
+			query.Error = ErrSortBy
+			return query
+		}
+
+		order := fmt.Sprintf("%s %s", ms.Sorter[meta.SortBy], meta.Sort)
+
+		query = query.Order(order)
+		if err := query.Error; err != nil {
+			return query
+		}
+	}
+
+	var totalCount int64
+	if err := query.Count(&totalCount).Error; err != nil {
+		logger.Errorln(query.Count(&totalCount).Error)
+		return query
+	}
+
+	meta.Count(int(totalCount))
+	skip, limit := meta.GetSkipAndLimit()
+	query = query.Scopes(paginate(skip, limit))
+	if err := query.Error; err != nil {
+		logger.Errorln(err)
+		return query
+	}
+
+	return query
+}
+
+func paginate(page, perPage int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		offset := (page - 1) * perPage
-		return db.Offset(offset).Limit(perPage)
+		return db.Offset(page).Limit(perPage)
+	}
+}
+
+func addEmbeddedFields(embedType reflect.Type, ms *MetaService, tablePrefix string) {
+	if embedType.Kind() == reflect.Ptr {
+		embedType = embedType.Elem()
+	}
+	if embedType.Kind() == reflect.Struct {
+		for i := 0; i < embedType.NumField(); i++ {
+			field := embedType.Field(i)
+			jsonTag := field.Tag.Get("json")
+			if jsonTag == "" {
+				jsonTag = field.Name
+			}
+
+			fullField := fmt.Sprintf("%s.%s", tablePrefix, jsonTag)
+
+			switch field.Type.Kind() {
+			case reflect.String:
+				ms.Filter[jsonTag] = fmt.Sprintf("%s ILIKE ?", fullField)
+				ms.Sorter[jsonTag] = fullField
+			default:
+				ms.Filter[jsonTag] = fmt.Sprintf("%s = ?", fullField)
+				ms.Sorter[jsonTag] = fullField
+			}
+		}
 	}
 }

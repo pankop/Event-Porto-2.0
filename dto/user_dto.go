@@ -2,7 +2,7 @@ package dto
 
 import (
 	"errors"
-	"mime/multipart"
+	"github.com/Caknoooo/go-gin-clean-starter/utils/pagination"
 
 	"github.com/Caknoooo/go-gin-clean-starter/entity"
 )

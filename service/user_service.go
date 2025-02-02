@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"context"
+	"github.com/Caknoooo/go-gin-clean-starter/utils/pagination"
 	"gorm.io/gorm"
 	"html/template"
 	"os"
@@ -21,7 +22,7 @@ import (
 type (
 	UserService interface {
 		Register(ctx context.Context, req dto.UserCreateRequest) (dto.UserResponse, error)
-		GetAllUserWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.UserPaginationResponse, error)
+		GetAllUserWithPagination(ctx context.Context, req pagination.Meta) (dto.UserPaginationResponse, error)
 		GetUserById(ctx context.Context, userId string) (dto.UserResponse, error)
 
 		//GetUserByEmail(ctx context.Context, email string) (dto.UserResponse, error)
@@ -218,7 +219,7 @@ func (s *userService) VerifyEmail(ctx context.Context, req dto.VerifyEmailReques
 	}, nil
 }
 
-func (s *userService) GetAllUserWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.UserPaginationResponse, error) {
+func (s *userService) GetAllUserWithPagination(ctx context.Context, req pagination.Meta) (dto.UserPaginationResponse, error) {
 	dataWithPaginate, err := s.userRepo.GetAllUserWithPagination(ctx, nil, req)
 	if err != nil {
 		return dto.UserPaginationResponse{}, err
